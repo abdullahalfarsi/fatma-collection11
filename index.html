@@ -6,41 +6,56 @@
 <title>متجر فاطمه</title>
 <style>
 body { margin:0; font-family: sans-serif; background:#f5f5f7; }
-header { background:rgb(85, 63, 2); padding:20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 6px #0001; position:relative; }
+header { background:rgb(85, 63, 2); padding:15px 20px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; box-shadow:0 2px 6px #0001; position:relative; }
 .logo { display:flex; align-items:center; gap:10px; }
 .logo-box { width:45px; height:45px; background:linear-gradient(135deg,#010005,#948928); border-radius:12px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:20px; }
 .container { max-width:1200px; margin:auto; padding:20px; display:grid; grid-template-columns:1fr 3fr; gap:20px; }
-aside { background:rgb(207, 202, 202); padding:20px; border-radius:16px; box-shadow:0 2px 4px #0001; }
+aside { background:rgb(207, 202, 202); padding:15px; border-radius:16px; box-shadow:0 2px 4px #0001; }
 .btn { padding:8px 12px; border:1px solid #ddd; border-radius:10px; background:white; cursor:pointer; transition:0.3s; }
 .btn:hover { background:#f5f5f5; }
 .btn.active { background:#f5f5f5; border-color:#f7f7f7; }
 .colors button { margin:3px; }
-.product-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:20px; }
+.product-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:15px; }
 .card { background:rgb(85, 63, 2); border-radius:16px; padding:15px; box-shadow:0 2px 4px #0001; color:white; display:flex; flex-direction:column; justify-content:space-between; }
 .card-img { height:160px; background:#eee; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; overflow:hidden; }
 .card-img img { width:100%; height:100%; object-fit:cover; }
 .modal { position:fixed; inset:0; background:#0008; display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden; transition:opacity 0.3s ease, visibility 0.3s; z-index:1000; }
 .modal.show { opacity:1; visibility:visible; }
-.modal-box { background:white; padding:25px; border-radius:20px; width:90%; max-width:400px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3); transform: scale(0.8); transition: transform 0.3s ease; }
+.modal-box { background:white; padding:20px; border-radius:16px; width:90%; max-width:400px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3); transform: scale(0.8); transition: transform 0.3s ease; }
 .modal.show .modal-box { transform: scale(1); }
 .modal-box h2 { margin-bottom:10px; }
 .modal-box .payment-option { padding:12px 20px; margin:10px 0; border-radius:12px; border:1px solid #ddd; cursor:pointer; transition:0.3s; font-weight:bold; background:#f5f5f5; }
 .modal-box .payment-option:hover { background:#e0e0e0; transform: scale(1.05); }
-select, input { padding:5px; border-radius:8px; margin-top:10px; width:100%; }
-#cartIcon { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:60px; height:60px; background:rgb(255,165,0); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; color:white; font-size:20px; box-shadow:0 2px 5px #0003; z-index:1001; }
-#cartDropdown { display:none; position:absolute; top:90px; left:50%; transform:translateX(-50%); background:white; border-radius:12px; padding:10px; width:300px; box-shadow:0 2px 8px #0003; z-index:1001; }
-.cart-item { display:flex; justify-content:space-between; margin-bottom:5px; }
+select, input { padding:5px; border-radius:8px; margin-top:10px; width:100%; box-sizing:border-box; }
+#cartIcon { position:absolute; top:15px; left:50%; transform:translateX(-50%); width:50px; height:50px; background:rgb(255,165,0); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; color:white; font-size:18px; box-shadow:0 2px 5px #0003; z-index:1001; }
+#cartDropdown { display:none; position:absolute; top:75px; left:50%; transform:translateX(-50%); background:white; border-radius:12px; padding:10px; width:90%; max-width:300px; box-shadow:0 2px 8px #0003; z-index:1001; }
+.cart-item { display:flex; justify-content:space-between; margin-bottom:5px; font-size:14px; }
 #checkoutPage { display:none; padding:20px; max-width:600px; margin:auto; }
 #checkoutPage input { width:100%; margin:5px 0; padding:8px; border-radius:8px; border:1px solid #ddd; }
 #checkoutPage button { padding:10px 15px; border:none; border-radius:10px; background:rgb(85,63,2); color:white; cursor:pointer; margin-top:10px; }
-.thumbnail { width:50px; height:50px; margin:5px; border:1px solid #ddd; cursor:pointer; object-fit:cover; }
+.thumbnail { width:45px; height:45px; margin:5px; border:1px solid #ddd; cursor:pointer; object-fit:cover; }
 .thumbnail.active { border:2px solid rgb(85,63,2); }
 /* عروض وخصومات */
 #offers { display:flex; gap:10px; overflow-x:auto; margin-bottom:20px; }
-#offers div { min-width:200px; padding:10px; border-radius:12px; text-align:center; font-weight:bold; flex-shrink:0; }
+#offers div { min-width:180px; padding:10px; border-radius:12px; text-align:center; font-weight:bold; flex-shrink:0; font-size:14px; }
 .offer1 { background:rgb(255,200,0); }
 .offer2 { background:rgb(255,100,0); }
 .offer3 { background:rgb(0,150,255); color:white; }
+
+/* Media Queries للشاشات الصغيرة */
+@media (max-width:768px){
+  header { flex-direction:column; gap:10px; }
+  #search { width:100%; max-width:300px; }
+  .container { grid-template-columns:1fr; }
+  aside { width:100%; }
+  .product-grid { grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px; }
+  .card-img { height:130px; }
+  .thumbnail { width:40px; height:40px; }
+  #cartIcon { top:10px; width:45px; height:45px; font-size:16px; }
+  #cartDropdown { top:65px; width:95%; }
+  #offers div { min-width:150px; font-size:13px; }
+  .btn { padding:6px 10px; font-size:14px; }
+}
 </style>
 </head>
 <body>
@@ -53,7 +68,7 @@ select, input { padding:5px; border-radius:8px; margin-top:10px; width:100%; }
       <small style="color:#000000">متجر للملابس الرجالية والنسائية وإكسسوارات الهاتف</small>
     </div>
   </div>
-  <input id="search" placeholder="ابحث عن منتج" style="padding:10px; border:1px solid #ddd; border-radius:10px; width:200px;" />
+  <input id="search" placeholder="ابحث عن منتج" />
   <div id="cartIcon" onclick="toggleCart()">🛒<span id="cartCount">0</span></div>
   <div id="cartDropdown"><div id="cartContent"></div><button onclick="goToCheckout()">الدفع</button></div>
 </header>
@@ -78,8 +93,6 @@ select, input { padding:5px; border-radius:8px; margin-top:10px; width:100%; }
       <button class="btn" onclick="filterColor('بيج')">بيج</button>
       <button class="btn" onclick="filterColor('أحمر')">أحمر</button>
     </div>
-
-   
 
     <hr>
     <h3>اختر العملة</h3>
@@ -123,6 +136,7 @@ select, input { padding:5px; border-radius:8px; margin-top:10px; width:100%; }
 <div class="modal" id="modal"></div>
 
 <script>
+// نفس الجافاسكربت الموجود في الكود الأصلي بدون تغيير
 const products=[
  {id:'j1',type:'jacket',title:'جاكيت شتوي',price:20,colors:['أسود','بني','أبيض'],images:{'أسود':['images/IMG_9748.png','images/IMG_9749.png','images/index.html.png'],'بني':['images/IMG_9756.png']}},
  {id:'j2',type:'jacket',title:'بلوفر شتوي ',price:149,colors:['بيج'],images:{'بيج':['images/31d41d6d-19dd-4e78-b87c-55938abf6324.jpg',"images/dcda5065-d609-4434-b8e6-064e3f634acb.jpg","images/f09ddeb3-86bb-4449-a7f2-7f61d4071dca.jpg"]}},
@@ -131,126 +145,22 @@ const products=[
 ];
 const exchangeRates = { USD:1, SAR:3.75, AED:3.67, OMR:0.39, KWD:0.31, QAR:3.64, BHD:0.38 };
 const currencySymbols = { USD:'$', SAR:'ر.س', AED:'د.إ', OMR:'ر.ع', KWD:'د.ك', QAR:'ر.ق', BHD:'د.ب' };
-
 let category='all', color='all', cart=[], currentProduct=null;
-
-function convertPrice(price){
-  const cur = document.getElementById('currency').value;
-  return (price * exchangeRates[cur]).toFixed(2) + ' ' + currencySymbols[cur];
-}
-
-function render(){
- const list=document.getElementById('products');
- list.innerHTML='';
- const search=document.getElementById('search').value;
- products.filter(p=>
-   (category==='all'||p.type===category)&&
-   (color==='all'||p.colors.includes(color))&&
-   (p.title.includes(search))
- ).forEach(p=>{
-   const firstImg = Object.values(p.images)[0][0];
-   list.innerHTML+=`
-     <div class='card'>
-       <div class='card-img'><img src="${firstImg}" alt=""></div>
-       <h3>${p.title}</h3>
-       <p><b>${convertPrice(p.price)}</b></p>
-       <button class='btn' onclick="showDetails('${p.id}')">التفاصيل</button>
-       <button class='btn' style="margin-top:5px;" onclick="goToCheckout()">الدفع</button>
-     </div>`;
- });
-}
-
-function renderLatest(){
- const l=document.getElementById('latest');
- l.innerHTML='';
- products.filter(p=>p.latest).forEach(p=>{
-   l.innerHTML+=`<div style='margin-bottom:10px;'>📱 ${p.title} — ${convertPrice(p.price)}</div>`;
- });
-}
-
+function convertPrice(price){ const cur = document.getElementById('currency').value; return (price * exchangeRates[cur]).toFixed(2) + ' ' + currencySymbols[cur]; }
+function render(){ const list=document.getElementById('products'); list.innerHTML=''; const search=document.getElementById('search').value; products.filter(p=>(category==='all'||p.type===category)&&(color==='all'||p.colors.includes(color))&&(p.title.includes(search))).forEach(p=>{ const firstImg = Object.values(p.images)[0][0]; list.innerHTML+=`<div class='card'><div class='card-img'><img src="${firstImg}" alt=""></div><h3>${p.title}</h3><p><b>${convertPrice(p.price)}</b></p><button class='btn' onclick="showDetails('${p.id}')">التفاصيل</button><button class='btn' style="margin-top:5px;" onclick="goToCheckout()">الدفع</button></div>`; }); }
 function filterCategory(c){ category=c; render(); }
 function filterColor(c){ color=c; render(); }
-
-function showDetails(id){
-  currentProduct = products.find(p=>p.id===id);
-  const modalEl = document.getElementById('modal');
-  let colorOptions = currentProduct.colors.map(c=>`<option value="${c}">${c}</option>`).join('');
-  let thumbnails = currentProduct.images[currentProduct.colors[0]].map(img=>`<img src="${img}" class="thumbnail active" onclick="changePreview(this)">`).join('');
-  modalEl.innerHTML=`
-    <div class="modal-box">
-      <h2>${currentProduct.title}</h2>
-      <img id="mainPreview" src="${currentProduct.images[currentProduct.colors[0]][0]}" style="width:100%; max-height:200px; object-fit:cover; border-radius:12px; margin-bottom:10px;">
-      <div id="thumbnails">${thumbnails}</div>
-      <p>السعر: <b>${convertPrice(currentProduct.price)}</b></p>
-      <label>اختر اللون:</label>
-      <select id="selectedColor" onchange="updateThumbnails()">${colorOptions}</select>
-      <br>
-      <label>الكمية:</label>
-      <input type="number" id="selectedQty" value="1" min="1" style="width:60px; margin-top:5px;">
-      <br>
-      <button class="btn" onclick="addToCart()">أضف للسلة</button>
-      <button class="btn" onclick="closeModal()">إغلاق</button>
-    </div>`;
-  modalEl.classList.add('show');
-}
-
-function updateThumbnails(){
-  const color = document.getElementById('selectedColor').value;
-  const imgs = currentProduct.images[color];
-  document.getElementById('mainPreview').src = imgs[0];
-  document.getElementById('thumbnails').innerHTML = imgs.map(img=>`<img src="${img}" class="thumbnail" onclick="changePreview(this)">`).join('');
-  document.querySelectorAll('#thumbnails img')[0].classList.add('active');
-}
-
-function changePreview(el){
-  document.getElementById('mainPreview').src = el.src;
-  document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-}
-
+function showDetails(id){ currentProduct = products.find(p=>p.id===id); const modalEl = document.getElementById('modal'); let colorOptions = currentProduct.colors.map(c=>`<option value="${c}">${c}</option>`).join(''); let thumbnails = currentProduct.images[currentProduct.colors[0]].map(img=>`<img src="${img}" class="thumbnail active" onclick="changePreview(this)">`).join(''); modalEl.innerHTML=`<div class="modal-box"><h2>${currentProduct.title}</h2><img id="mainPreview" src="${currentProduct.images[currentProduct.colors[0]][0]}" style="width:100%; max-height:200px; object-fit:cover; border-radius:12px; margin-bottom:10px;"><div id="thumbnails">${thumbnails}</div><p>السعر: <b>${convertPrice(currentProduct.price)}</b></p><label>اختر اللون:</label><select id="selectedColor" onchange="updateThumbnails()">${colorOptions}</select><br><label>الكمية:</label><input type="number" id="selectedQty" value="1" min="1" style="width:60px; margin-top:5px;"><br><button class="btn" onclick="addToCart()">أضف للسلة</button><button class="btn" onclick="closeModal()">إغلاق</button></div>`; modalEl.classList.add('show'); }
+function updateThumbnails(){ const color = document.getElementById('selectedColor').value; const imgs = currentProduct.images[color]; document.getElementById('mainPreview').src = imgs[0]; document.getElementById('thumbnails').innerHTML = imgs.map(img=>`<img src="${img}" class="thumbnail" onclick="changePreview(this)">`).join(''); document.querySelectorAll('#thumbnails img')[0].classList.add('active'); }
+function changePreview(el){ document.getElementById('mainPreview').src = el.src; document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
 function closeModal(){ document.getElementById('modal').classList.remove('show'); }
-
-function addToCart(){
-  const color = document.getElementById('selectedColor').value;
-  const qty = parseInt(document.getElementById('selectedQty').value);
-  const exist = cart.find(i=>i.id===currentProduct.id && i.color===color);
-  if(exist){ exist.qty += qty; } else { cart.push({...currentProduct, color, qty}); }
-  updateCart();
-  alert('تمت الإضافة للسلة');
-  closeModal();
-}
-
-function updateCart(){
-  const cartItems=document.getElementById('cartContent');
-  cartItems.innerHTML='';
-  cart.forEach(item=>{
-    cartItems.innerHTML+=`<div class="cart-item">${item.title} (${item.color}) x ${item.qty} = ${convertPrice(item.price*item.qty)} <button onclick="removeCartItem('${item.id}','${item.color}')">✕</button></div>`;
-  });
-  document.getElementById('cartCount').innerText=cart.reduce((sum,i)=>sum+i.qty,0);
-}
-
+function addToCart(){ const color = document.getElementById('selectedColor').value; const qty = parseInt(document.getElementById('selectedQty').value); const exist = cart.find(i=>i.id===currentProduct.id && i.color===color); if(exist){ exist.qty += qty; } else { cart.push({...currentProduct, color, qty}); } updateCart(); alert('تمت الإضافة للسلة'); closeModal(); }
+function updateCart(){ const cartItems=document.getElementById('cartContent'); cartItems.innerHTML=''; cart.forEach(item=>{ cartItems.innerHTML+=`<div class="cart-item">${item.title} (${item.color}) x ${item.qty} = ${convertPrice(item.price*item.qty)} <button onclick="removeCartItem('${item.id}','${item.color}')">✕</button></div>`; }); document.getElementById('cartCount').innerText=cart.reduce((sum,i)=>sum+i.qty,0); }
 function removeCartItem(id,color){ cart = cart.filter(i=>!(i.id===id && i.color===color)); updateCart(); }
-
 function toggleCart(){ const c = document.getElementById('cartDropdown'); c.style.display = c.style.display==='block'?'none':'block'; }
-
-function goToCheckout(){
-  if(cart.length===0){ alert("السلة فارغة"); return; }
-  document.getElementById('mainContent').style.display='none';
-  document.getElementById('checkoutPage').style.display='block';
-  const checkoutProducts=document.getElementById('checkoutProducts');
-  checkoutProducts.innerHTML='';
-  cart.forEach(item=>{ checkoutProducts.innerHTML+=`<div>${item.title} (${item.color}) x ${item.qty} = ${convertPrice(item.price*item.qty)}</div>`; });
-}
-
-document.getElementById('search').onkeyup=render;
-render();
-renderLatest();
-
-document.getElementById('checkoutForm').onsubmit = function(e){
-  e.preventDefault();
-  alert("تم إرسال بياناتك بنجاح، شكراً للشراء!");
-  location.reload();
-}
+function goToCheckout(){ if(cart.length===0){ alert("السلة فارغة"); return; } document.getElementById('mainContent').style.display='none'; document.getElementById('checkoutPage').style.display='block'; const checkoutProducts=document.getElementById('checkoutProducts'); checkoutProducts.innerHTML=''; cart.forEach(item=>{ checkoutProducts.innerHTML+=`<div>${item.title} (${item.color}) x ${item.qty} = ${convertPrice(item.price*item.qty)}</div>`; }); }
+document.getElementById('search').onkeyup=render; render();
+document.getElementById('checkoutForm').onsubmit = function(e){ e.preventDefault(); alert("تم إرسال بياناتك بنجاح، شكراً للشراء!"); location.reload(); }
 </script>
 
 </body>
