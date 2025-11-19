@@ -29,21 +29,21 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 .modal.show { opacity:1; visibility:visible; }
 .modal-box { background:white; padding:20px; border-radius:16px; width:90%; max-width:400px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3); transform: scale(0.8); transition: transform 0.3s ease; }
 .modal.show .modal-box { transform: scale(1); }
-.modal-box h2 { margin-bottom:10px; font-size:18px; }
 .thumbnail { width:45px; height:45px; margin:5px; border:1px solid #ddd; cursor:pointer; object-fit:cover; border-radius:8px; transition:0.3s; }
 .thumbnail.active { border:2px solid rgb(85,63,2); transform:scale(1.1); }
 #cartIcon { position:absolute; top:15px; left:50%; transform:translateX(-50%); width:50px; height:50px; background:rgb(255,165,0); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; color:white; font-size:18px; box-shadow:0 2px 5px #0003; z-index:1001; transition:0.3s; }
 #cartIcon:hover { transform:scale(1.1); }
 #cartDropdown { display:none; position:absolute; top:75px; left:50%; transform:translateX(-50%); background:#fff; border-radius:16px; padding:15px; width:90%; max-width:350px; box-shadow:0 8px 20px rgba(0,0,0,0.25); z-index:1001; transition:0.3s; }
-.cart-item { display:flex; align-items:center; justify-content:space-between; background:#f9f5ef; padding:8px 10px; border-radius:12px; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); transition:0.2s; }
+.cart-item { display:flex; align-items:center; justify-content:space-between; background:#f5f5f5; padding:10px; border-radius:12px; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); transition:0.2s; }
 .cart-item:hover { box-shadow:0 4px 10px rgba(0,0,0,0.15); }
 .cart-item img { width:50px; height:50px; object-fit:cover; border-radius:10px; margin-right:10px; }
 .cart-item-details { flex:1; display:flex; flex-direction:column; gap:2px; }
 .cart-item-details span { font-size:14px; font-weight:600; }
 .cart-item-controls { display:flex; align-items:center; gap:5px; }
-.cart-item-controls button { padding:2px 6px; font-size:13px; border-radius:6px; border:none; background:rgb(85,63,2); color:#fff; cursor:pointer; transition:0.2s; }
+.cart-item-controls button { padding:4px 8px; font-size:13px; border-radius:6px; border:none; background:rgb(85,63,2); color:#fff; cursor:pointer; transition:0.2s; }
 .cart-item-controls button:hover { background:rgb(255,165,0); }
-.cart-total { text-align:center; font-weight:bold; margin-top:10px; padding-top:10px; border-top:1px solid #ddd; }
+.cart-item-controls span { font-weight:bold; padding:0 5px; }
+.cart-total { text-align:center; font-weight:bold; margin-top:10px; padding-top:10px; border-top:1px solid #ddd; font-size:16px; }
 #checkoutPage { display:none; padding:20px; max-width:600px; margin:auto; }
 #checkoutPage input { width:100%; margin:5px 0; padding:8px; border-radius:8px; border:1px solid #ddd; font-size:14px; }
 #checkoutPage button { padding:10px 15px; border:none; border-radius:10px; background:rgb(85,63,2); color:white; cursor:pointer; margin-top:10px; font-size:14px; transition:0.3s; }
@@ -59,6 +59,14 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 .currency-btn .flag { font-size:18px; }
 .currency-btn:hover { transform:scale(1.05); background:rgb(255,215,0); color:white; box-shadow:0 4px 10px rgba(0,0,0,0.2); }
 .currency-btn.active { background:rgb(255,200,0); color:white; border-color:rgb(255,165,0); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+/* أنيميشن إضافة للسلة */
+@keyframes flyToCart {
+  0% { transform:translate(0,0) scale(1); opacity:1; }
+  100% { transform:translate(var(--x), var(--y)) scale(0.2); opacity:0; }
+}
+.fly-img {
+  position:absolute; width:80px; height:80px; border-radius:12px; pointer-events:none; z-index:2000; animation:flyToCart 0.8s forwards;
+}
 @media (max-width:768px){
   header { flex-direction:column; gap:10px; padding:10px; }
   #search { width:100%; max-width:100%; margin-top:10px; }
@@ -79,6 +87,49 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 </head>
 <body>
 
+<div id="invoicePage" style="display:none; padding:20px; max-width:650px; margin:auto; animation:fadeIn 0.6s;">
+  <div style="background:linear-gradient(135deg,#fff8e1,#fff1c6); border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.25); padding:25px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#333;">
+    
+    <!-- شعار المتجر -->
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="width:60px; height:60px; margin:auto; background:linear-gradient(135deg,#010005,#948928); border-radius:15px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:28px;">F</div>
+      <h2 style="margin:10px 0 0 0; color:rgb(85,63,2); font-size:22px;">فاتورة الشراء - FATMA COLLECTION</h2>
+      <small style="color:rgb(85,63,2); font-size:12px;">متجر للملابس والإكسسوارات</small>
+    </div>
+
+    <!-- المنتجات -->
+    <div id="invoiceProducts" style="margin-bottom:20px;"></div>
+
+    <!-- المجموع الكلي -->
+    <div style="text-align:right; font-weight:bold; font-size:18px; margin-bottom:20px;">
+      المجموع الكلي: <span id="invoiceTotal">0</span> <span id="invoiceCurrency">ر.ع</span>
+    </div>
+
+    <!-- زر الطباعة -->
+    <button onclick="printInvoice()" style="display:block; margin:auto; padding:12px 20px; background:rgb(255,200,0); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold; transition:0.3s; box-shadow:0 4px 10px rgba(0,0,0,0.2);">🖨️ طباعة الفاتورة</button>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  0% {opacity:0; transform:translateY(-20px);}
+  100% {opacity:1; transform:translateY(0);}
+}
+.invoice-item {
+  display:flex;
+  justify-content:space-between;
+  padding:10px 15px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.8);
+  margin-bottom:10px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  font-size:15px;
+  transition:0.3s;
+}
+.invoice-item:hover { background:rgba(255,255,255,1); transform:scale(1.02);}
+.invoice-item span { display:inline-block; }
+</style>
+
 <header>
   <div class="logo">
     <div class="logo-box">F</div>
@@ -89,7 +140,7 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
   </div>
   <input id="search" placeholder="ابحث عن منتج" />
   <div id="cartIcon" onclick="toggleCart()">🛒<span id="cartCount">0</span></div>
-  <div id="cartDropdown"><div id="cartContent"></div><button onclick="goToCheckout()">الدفع</button></div>
+  <div id="cartDropdown"><div id="cartContent"></div><div class="cart-total">المجموع: <span id="cartTotal">0</span> ر.ع</div><button onclick="goToCheckout()">الدفع</button></div>
 </header>
 
 <div id="mainContent">
@@ -99,21 +150,10 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
     <button class="btn active" onclick="filterCategory('all')">الكل</button>
     <button class="btn" onclick="filterCategory('jacket')">الجاكيتات</button>
     <button class="btn" onclick="filterCategory('case')">كفرات الجوال</button>
+    <button class="btn" onclick="filterCategory('glases')">النظارات </button>
     <hr>
     <h3>اللون</h3>
-    <div class="colors">
-      <button class="btn active" onclick="filterColor('all')">الكل</button>
-      <button class="btn" onclick="filterColor('أسود')">أسود</button>
-      <button class="btn" onclick="filterColor('رمادي')">رمادي</button>
-      <button class="btn" onclick="filterColor('بني')">بني</button>
-      <button class="btn" onclick="filterColor('شفاف')">شفاف</button>
-      <button class="btn" onclick="filterColor('أبيض')">أبيض</button>
-      <button class="btn" onclick="filterColor('بيج')">بيج</button>
-      <button class="btn" onclick="filterColor('أحمر')">أحمر</button>
-      <button class="btn" onclick="filterColor('أزرق')">أزرق</button>
-      <button class="btn" onclick="filterColor('أخضر')">أخضر</button>
-      <button class="btn" onclick="filterColor('أزرق فاتح')">أزرق فاتح</button>
-    </div>
+    <div class="colors" id="colorFilter"></div>
     <hr>
     <h3>اختر العملة</h3>
     <div class="currency-options">
@@ -154,182 +194,330 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 
 <div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
 
-<select id="currency" onchange="render()" style="display:none">
-  <option value="OMR" selected>ريال عماني ر.ع</option>
-  <option value="USD">دولار أمريكي $</option>
-  <option value="SAR">ريال سعودي ر.س</option>
-  <option value="AED">درهم إماراتي د.إ</option>
-  <option value="KWD">دينار كويتي د.ك</option>
-  <option value="QAR">ريال قطري ر.ق</option>
-  <option value="BHD">دينار بحريني د.ب</option>
-</select>
-
 <script>
 const products = [
-{id:'j1',type:'jacket',title:'جاكيت شتوي',price:20,colors:['أسود','بني','أبيض'],images:{'أسود':['images/IMG_9748.png'],'بني':['images/IMG_9749.png'],'أبيض':['images/index.html.png']}},
-{id:'j2',type:'jacket',title:'بلوفر شتوي',price:149,colors:['بيج'],images:{'بيج':['images/31d41d6d-19dd-4e78-b87c-55938abf6324.jpg','images/dcda5065-d609-4434-b8e6-064e3f634acb.jpg','images/f09ddeb3-86bb-4449-a7f2-7f61d4071dca.jpg']}},
-{id:'j3',type:'jacket',title:'بلوفر شتوي أزرق',price:149,colors:['أزرق'],images:{'أزرق':['images/IMG_9793.png','images/IMG_9794.png','images/IMG_9795.png']}},
-{id:'c1',type:'case',title:'كفر شفاف',price:19,colors:['شفاف'],images:{'شفاف':['images/e0287c8e-c965-40fd-b51f-137e23f0ea13.jpg']}},
-{id:'c2',type:'case',title:'كفر جلد',price:29,colors:['بني'],images:{'بني':['images/IMG_9756.png']}},
-{id:'j4',type:'jacket',title:'بلوفر شتوي رمادي',price:120,colors:['رمادي'],images:{'رمادي':['images/IMG_9798.png','images/IMG_9799.png','images/IMG_9800.png','images/IMG_9801.png']}},
-{id:'j5',type:'jacket',title:'بلوفر شتوي رمادي',price:135,colors:['رمادي'],images:{'رمادي':['images/51a9aa28-5c17-4267-8227-982f4c0005db.jpg','images/green2.png']}},
-{id:'j6',type:'jacket',title:'بلوفر شتوي أحمر',price:110,colors:['أحمر'],images:{'أحمر':['images/red1.png','images/red2.png']}},
-{id:'j7',type:'jacket',title:'بلوفر شتوي بني',price:140,colors:['بني'],images:{'بني':['images/51a9aa28-5c17-4267-8227-982f4c0005db.jpg','images/brown2.png']}},
-{id:'j8',type:'jacket',title:'بلوفر شتوي أزرق فاتح',price:125,colors:['أزرق فاتح'],images:{'أزرق فاتح':['images/lightblue1.png','images/lightblue2.png']}}
+  {id:'j1',type:'jacket',title:'جاكيت شتوي',price:20,colors:['أسود','بني','أبيض'],images:{'أسود':['images/IMG_9748.png'],'أبيض':['images/IMG_9749.png'],'بني':['images/index.html.png']}},
+  {id:'j2',type:'jacket',title:'بلوفر شتوي',price:149,colors:['بيج'],images:{'بيج':['images/31d41d6d-19dd-4e78-b87c-55938abf6324.jpg','images/dcda5065-d609-4434-b8e6-064e3f634acb.jpg','images/f09ddeb3-86bb-4449-a7f2-7f61d4071dca.jpg']}},
+{id:'j3', type:'jacket', title:'بلوفر شتوي أزرق', price:149, colors:['أزرق','أحمر','أزرق غامق'], images:{'أزرق':['images/IMG_9793.png'],'أحمر':['images/IMG_9794.png'],'أزرق غامق':['images/IMG_9795.png']}},
+  {id:'c1',type:'jacket',title:'جاكيت أنيق ',price:19,colors:['شفاف'],images:{'شفاف':['images/e0287c8e-c965-40fd-b51f-137e23f0ea13.jpg']}},
+  {id:'c2',type:'case',title:'كفر جلد',price:29,colors:['بني'],images:{'بني':['images/IMG_9756.png']}},
+{id:'j4', type:'jacket', title:'بلوفر شتوي رمادي', price:120, colors:['أزرق غامق','رمادي داكن','حليبي','رصاصي'], images:{'أزرق غامق':['images/IMG_9798.png'],'رمادي داكن':['images/IMG_9799.png'],'حليبي':['images/IMG_9800.png'],'رصاصي':['images/IMG_9801.png']}},
+     {id:'p1',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/3fcf2538-a88d-4ae3-bee3-34243c65a78b.jpg']}},
+  {id:'p2',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/5a413d54-b961-40f8-8806-3b82692eccb2.jpg']}},
+  {id:'p3',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/6d0f7951-04ce-44e7-92be-d6c048f3685d.jpg']}},
+  {id:'p4',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/20f0eb3e-0131-4d30-b4d7-8b4317adbcae.jpg']}},
+  {id:'p5',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/25ce02af-c3f7-4f41-b1d4-d558f8206da6.jpg']}},
+  {id:'p6',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/62f5ed32-cfcc-43ff-a7e6-68b78262cbbe.jpg']}},
+  {id:'p7',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/76c07d93-ecfb-40c3-91d0-d76372c8fc0a.jpg']}},
+  {id:'p8',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/96e5a320-7dc9-4034-a896-506b2bef7310.jpg']}},
+  {id:'p9',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/59225a25-296e-4acf-a32d-301536500c88.jpg']}},
+  {id:'p10',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/686525b5-7ecb-412b-b572-3484528e4e8a.jpg']}},
+  {id:'p11',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/69467239-7bed-4c15-970b-f9d11b1c66ce.jpg']}},
+  {id:'p12',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/b2c341cd-0bb9-438f-8c59-3e7316010d81.jpg']}},
+  {id:'p13',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/bbd94287-d59c-4127-8755-a24b1e575bb2.jpg']}},
+  {id:'p14',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/bc5ac061-9022-4251-9d0c-acf16c859461.jpg']}},
+  {id:'p15',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/c27c2fcf-cc72-4840-82ea-83596dd7d90b.jpg']}},
+  {id:'p16',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/cb9c316d-281b-406b-94d6-fd8902a80cb5.jpg']}},
+  {id:'p17',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/d8d4f19a-642f-41e1-9290-f441f7eb43bb.jpg']}},
+  {id:'p18',type:'jacket',title:'بلوفر شتوي',price:7.5,colors:['أسود'],images:{'أسود':['images/daabfdd0-9a4a-4915-a4df-0413d58b777a.jpg']}},
+    {id:'np1', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/8d377c07-fb45-4650-9760-40748c21cb8d.jpg','images/9ffdf603-37a5-4729-850a-6a38eb520f19.jpg','images/5780f9d7-cb68-43d3-94f7-60a0b954acd5.jpg']}},
+  {id:'np2', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/01c5618a-460c-46c0-bacb-45daea6b1ed8.jpg','images/ea00c5fa-8b0a-4508-872a-f48f08ad0939.jpg','images/e607e0d2-0fda-4d60-bac4-994e8938d26c.jpg']}},
+  {id:'np3', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/dff750f4-c1d7-40de-9006-012cee20ca05.jpg','images/0874a0ea-12bf-4274-9f0d-fc44480897dc.jpg','images/8b26bbfb-32dd-4d2b-af43-f1ef098d7a78.jpg']}},
+  {id:'np4', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/1d6d615a-e0e6-40e2-bc6a-d9896ef80008.jpg']}},
+  {id:'np5', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/f09d6157-8a72-4248-ac2e-d6b70a63758a.jpg','images/c7b1b829-d1c6-4c5c-bedf-be61de435f1e.jpg']}},
+  {id:'np6', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/957ced73-f390-4a6d-af11-e725917b148d.jpg','images/09097d67-234b-4620-9895-b06fd216584f.jpg','images/c999885d-2c74-45f1-a2c2-a7d207e19870.jpg']}},
+  {id:'np7', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/71c02e1f-93f7-4cfd-a235-d8ab5a5470ae.jpg','images/5aab4386-ef86-4b27-924a-688ffed308ce.jpg','images/f263b02c-a407-4085-8e9c-92deab044f2b.jpg']}},
+  {id:'np8', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/078f9c76-c6e0-4122-b9db-2e6b86ac5b4a.jpg','images/52e12d48-fa7f-4d04-8c60-8bbbc4226e17.jpg','images/20fdbef1-c36b-4bc0-9e1f-ff5a6a12495a.jpg']}},
+  {id:'np9', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/f1d768c0-5f75-471c-a10f-c9144ec320d9.jpg','images/897d9d8d-8ef2-4348-8bd3-73f69d21b973.jpg']}},
+  {id:'np10', type:'glases', title:'نظارات', price:3, colors:['أسود'], images:{'أسود':['images/2ed1e6fb-2aa0-4835-a209-284f5b9ff334.jpg','images/68fcb4a6-1bb4-482f-acd6-82f9d133fe52.jpg','images/cc4b538d-38af-453e-9aed-c18bfb79e8fb.jpg','images/d1a45a6c-b8bb-4a4b-816f-e675b6c99245.jpg']}},
+  {id:'np11', type:'glases', title:'نظارات', price:3, colors:['أسود'], images:{'أسود':['images/7ffc8fe3-777a-4819-b6fb-a9aa0dd42682.jpg','images/a2d9121a-fc00-4af3-a597-6568e8ecfa56.jpg','images/a2ec9a83-87ce-4242-9a50-b718fe7214a3.jpg','images/afe41fb0-4be1-4d83-ac95-03b7d9bb51dc.jpg']}}
 ];
 
-const exchangeRates = { USD:1, SAR:3.75, AED:3.67, OMR:0.39, KWD:0.31, QAR:3.64, BHD:0.38 };
-const currencySymbols = { USD:'$', SAR:'ر.س', AED:'د.إ', OMR:'ر.ع', KWD:'د.ك', QAR:'ر.ق', BHD:'د.ب' };
-let category='all', color='all', cart=[];
+let cart = [];
+let selectedCurrency = 'OMR';
 
-function convertPrice(price){ 
-  const cur = document.getElementById('currency').value; 
-  return (price * exchangeRates[cur]).toFixed(2) + ' ' + currencySymbols[cur]; 
+function render() {
+  const grid = document.getElementById('products');
+  grid.innerHTML = '';
+  products.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="card-img"><img src="${p.images[p.colors[0]][0]}" alt="${p.title}"></div>
+      <h4>${p.title}</h4>
+      <p>${p.price} ${selectedCurrency}</p>
+      <button class="btn" onclick="showDetails('${p.id}')">التفاصيل</button>
+    `;
+    grid.appendChild(card);
+  });
+
+  // ألوان الفلترة
+  const colorsDiv = document.getElementById('colorFilter');
+  const allColors = [...new Set(products.flatMap(p=>p.colors))];
+  colorsDiv.innerHTML = allColors.map(c=>`<button class="btn" onclick="filterColor('${c}')">${c}</button>`).join('');
 }
 
-function render(){ 
-  const list=document.getElementById('products'); 
-  list.innerHTML=''; 
-  const search=document.getElementById('search').value.trim(); 
-  products.filter(p=>(category==='all'||p.type===category)&&(color==='all'||p.colors.includes(color))&&(p.title.includes(search))).forEach(p=>{ 
-    const firstImg = Object.values(p.images)[0][0]; 
-    list.innerHTML+=`
-      <div class='card'>
-        <div class='card-img'><img src="${firstImg}" alt=""></div>
-        <h3>${p.title}</h3>
-        <p><b>${convertPrice(p.price)}</b></p>
-        <button class='btn' onclick="showDetails('${p.id}')">التفاصيل</button>
-        <button class='btn' style="margin-top:5px;" onclick="addToCart('${p.id}')">أضف للسلة</button>
-      </div>`; 
-  }); 
-  updateCartCount();
+// عند إتمام الدفع، عرض الفاتورة
+document.getElementById('checkoutForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if(cart.length===0) return alert('السلة فارغة!');
+  
+  // عرض المنتجات في الفاتورة
+function showInvoice() {
+  document.getElementById('checkoutPage').style.display='none';
+  const invoiceDiv = document.getElementById('invoicePage');
+  const invoiceProducts = document.getElementById('invoiceProducts');
+  invoiceProducts.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className='invoice-item';
+    div.innerHTML = `<span>${item.title} - ${item.color} × ${item.qty}</span> <span>${(item.price*item.qty).toFixed(2)} ${selectedCurrency}</span>`;
+    invoiceProducts.appendChild(div);
+  });
+  document.getElementById('invoiceTotal').innerText = total.toFixed(2);
+  document.getElementById('invoiceCurrency').innerText = selectedCurrency;
+  invoiceDiv.style.display='block';
 }
 
-function filterCategory(c){ category=c; document.querySelectorAll('aside .btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); render(); }
-function filterColor(c){ color=c; document.querySelectorAll('.colors .btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); render(); }
+function showInvoice() {
+  document.getElementById('checkoutPage').style.display='none';
+  const invoiceDiv = document.getElementById('invoicePage');
+  const invoiceProducts = document.getElementById('invoiceProducts');
+  invoiceProducts.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    const div = document.createElement('div');
+    div.className='invoice-item';
+    div.innerHTML = `<span>${item.title} - ${item.color} × ${item.qty}</span> <span>${(item.price*item.qty).toFixed(2)} ${selectedCurrency}</span>`;
+    invoiceProducts.appendChild(div);
+  });
+  document.getElementById('invoiceTotal').innerText = total.toFixed(2);
+  document.getElementById('invoiceCurrency').innerText = selectedCurrency;
+  invoiceDiv.style.display='block';
+}
+
+function printInvoice(){
+  const printContents = document.getElementById('invoicePage').innerHTML;
+  const originalContents = document.body.innerHTML;
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+  location.reload(); // لإعادة تشغيل الكود بعد الطباعة
+}
+
+// تعديل goToCheckout لتظهر الفاتورة بعد الدفع مباشرة
+document.getElementById('checkoutForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  showInvoice();
+});
+
+function printInvoice(){
+  const printContents = document.getElementById('invoicePage').innerHTML;
+  const originalContents = document.body.innerHTML;
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+  location.reload(); // لإعادة تشغيل الكود بعد الطباعة
+}
+
+// تعديل goToCheckout لتظهر الفاتورة بعد الدفع مباشرة
+document.getElementById('checkoutForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  showInvoice();
+});
+  document.getElementById('invoiceTotal').innerText = total.toFixed(2) + ' ' + selectedCurrency;
+  
+  document.getElementById('invoiceModal').classList.add('show');
+
+  // مسح السلة بعد الدفع
+  cart = [];
+  document.getElementById('cartCount').innerText = 0;
+  renderCart();
+  document.getElementById('checkoutPage').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+});
+
+// إغلاق الفاتورة
+function closeInvoice(){
+  document.getElementById('invoiceModal').classList.remove('show');
+}
+
+
+function filterCategory(cat){
+  document.querySelectorAll('aside .btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const filtered = cat==='all'?products:products.filter(p=>p.type===cat);
+  renderFiltered(filtered);
+}
+
+function filterColor(color){
+  const filtered = products.filter(p=>p.colors.includes(color));
+  renderFiltered(filtered);
+}
+
+function renderFiltered(list){
+  const grid = document.getElementById('products');
+  grid.innerHTML = '';
+  list.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="card-img"><img src="${p.images[p.colors[0]][0]}" alt="${p.title}"></div>
+      <h4>${p.title}</h4>
+      <p>${p.price} ${selectedCurrency}</p>
+      <button class="btn" onclick="showDetails('${p.id}')">التفاصيل</button>
+    `;
+    grid.appendChild(card);
+  });
+}
 
 function showDetails(id){
-  const product = products.find(p=>p.id===id);
-  if(!product) return;
-  let imagesHtml = '';
-  const colorKeys = Object.keys(product.images);
-  for(let col of colorKeys){
-    product.images[col].forEach((img,index)=>{
-      imagesHtml += `<img class="thumbnail ${index===0?'active':''}" src="${img}" onclick="showImage('${img}', this)">`;
-    });
-  }
-  document.getElementById('modalBox').innerHTML = `
-    <h2>${product.title}</h2>
-    <img id="mainImage" src="${Object.values(product.images)[0][0]}" style="width:100%; border-radius:12px; margin-bottom:10px;">
-    <p><b>السعر: ${convertPrice(product.price)}</b></p>
-    <div>${imagesHtml}</div>
-    <p style="margin-top:10px; color:red; font-weight:bold;">ملاحظة: المنتج غير قابل للإسترجاع بعد الشراء</p>
-    <button class="btn" onclick="closeModal()">إغلاق</button>
-  `;
-  document.getElementById('modal').classList.add('show');
+  const product = products.find(p=>p.id===id);
+  if(!product) return;
+  let selectedColor = product.colors[0]; // تحديد اللون الافتراضي
+
+  function renderColorButtons(){
+    // ملاحظة: إضافة data-color لتحديد اللون النشط لاحقاً
+    return product.colors.map(c=>`<button class="btn ${c===selectedColor?'active':''}" data-color="${c}" onclick="changeModalColor('${id}','${c}', this)">${c}</button>`).join('');
+  }
+
+  function renderImages(color){
+    // دالة مساعدة لعرض الصور المصغرة
+    return product.images[color].map((img,index)=>`<img class="thumbnail ${index===0?'active':''}" src="${img}" onclick="showImage('${img}', this)">`).join('');
+  }
+
+  document.getElementById('modalBox').innerHTML = `
+    <h2>${product.title}</h2>
+    <div class="colors" id="modalColors">${renderColorButtons()}</div>
+    <img id="mainImage" src="${product.images[selectedColor][0]}" style="width:100%; border-radius:12px; margin-bottom:10px;">
+    <div id="modalThumbnails">${renderImages(selectedColor)}</div>
+    <button class="btn" id="addToCartBtn">أضف للسلة</button>
+    <button class="btn" onclick="closeModal()">إغلاق</button>
+  `;
+
+  // 🔑 هذا هو الجزء الأهم: تعيين وظيفة النقر (onclick) للزر بشكل ديناميكي
+  const cartBtn = document.getElementById('addToCartBtn');
+  cartBtn.onclick = function(event) {
+    // البحث عن زر اللون النشط حالياً واستخراج قيمة data-color
+    const activeColorBtn = document.querySelector('#modalBox .colors .btn.active');
+    const currentColor = activeColorBtn ? activeColorBtn.dataset.color : product.colors[0];
+    addToCart(id, currentColor, event.target);
+  };
+  
+  document.getElementById('modal').classList.add('show');
 }
 
-function showImage(src, el){
+function changeModalColor(id,color,btn){
+  const product = products.find(p=>p.id===id);
+  document.querySelectorAll('#modalBox .btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const mainImage = document.getElementById('mainImage');
+  mainImage.src = product.images[color][0];
+  const thumbnails = document.querySelectorAll('#modalBox .thumbnail');
+  thumbnails.forEach((t,i)=>{t.src=product.images[color][i]; t.classList.remove('active');});
+}
+
+function showImage(src,el){
   document.getElementById('mainImage').src = src;
-  const siblings = el.parentNode.querySelectorAll('img');
-  siblings.forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#modalBox .thumbnail').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
 }
 
 function closeModal(){ document.getElementById('modal').classList.remove('show'); }
 
-function addToCart(id){
+function addToCart(id,color,btn){
   const product = products.find(p=>p.id===id);
-  if(!product) return;
-  const existing = cart.find(item => item.id===id);
-  if(existing){
-    existing.qty += 1;
-  } else {
-    cart.push({id:product.id,title:product.title,price:product.price,qty:1,img:Object.values(product.images)[0][0]});
-  }
-  updateCartCount();
-  renderCart();
-}
 
-function updateCartCount(){
-  document.getElementById('cartCount').textContent = cart.reduce((a,b)=>a+b.qty,0);
+  // أنيميشن
+  const img = document.createElement('img');
+  img.src = product.images[color][0];
+  img.className='fly-img';
+  document.body.appendChild(img);
+  const rect = btn.getBoundingClientRect();
+  img.style.left = rect.left+'px';
+  img.style.top = rect.top+'px';
+  const cartIcon = document.getElementById('cartIcon');
+  const cartRect = cartIcon.getBoundingClientRect();
+  img.style.setProperty('--x', (cartRect.left-rect.left)+'px');
+  img.style.setProperty('--y', (cartRect.top-rect.top)+'px');
+  img.addEventListener('animationend',()=>{img.remove();});
+
+  // تحقق إذا المنتج موجود بالفعل
+  const existing = cart.find(c=>c.id===id && c.color===color);
+  if(existing){ existing.qty++; } 
+  else { cart.push({id,color,price:product.price,title:product.title,img:product.images[color][0],qty:1}); }
+  
+  document.getElementById('cartCount').innerText = cart.reduce((a,b)=>a+b.qty,0);
+  renderCart();
+  closeModal();
 }
 
 function renderCart(){
-  const cartContent = document.getElementById('cartContent');
-  if(cart.length===0){
-    cartContent.innerHTML = '<p style="text-align:center; font-weight:bold; padding:10px;">السلة فارغة</p>';
-    return;
-  }
-  let html = '';
+  const cartDiv = document.getElementById('cartContent');
+  cartDiv.innerHTML = '';
   let total = 0;
-  cart.forEach(item=>{
-    total += item.price * item.qty;
-    html += `
-      <div class="cart-item">
-        <img src="${item.img}" alt="">
-        <div class="cart-item-details">
-          <span>${item.title}</span>
-          <span>${convertPrice(item.price*item.qty)}</span>
-        </div>
-        <div class="cart-item-controls">
-          <button onclick="updateQty('${item.id}', -1)">-</button>
-          <span>${item.qty}</span>
-          <button onclick="updateQty('${item.id}', 1)">+</button>
-          <button onclick="removeFromCart('${item.id}')">x</button>
-        </div>
-      </div>`;
+  cart.forEach((item,index)=>{
+    total += item.price*item.qty;
+    const div = document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML=`
+      <img src="${item.img}">
+      <div class="cart-item-details">
+        <span>${item.title}</span>
+        <span>اللون: ${item.color}</span>
+        <span>${item.price} ${selectedCurrency}</span>
+      </div>
+      <div class="cart-item-controls">
+        <button onclick="changeQty(${index}, -1)">-</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${index}, 1)">+</button>
+        <button onclick="removeFromCart(${index})">حذف</button>
+      </div>
+    `;
+    cartDiv.appendChild(div);
   });
-  html += `<div class="cart-total">المجموع: ${convertPrice(total)}</div>`;
-  cartContent.innerHTML = html;
+  document.getElementById('cartTotal').innerText = total.toFixed(2);
 }
 
-function updateQty(id, change){
-  const item = cart.find(i=>i.id===id);
-  if(!item) return;
-  item.qty += change;
-  if(item.qty < 1) item.qty = 1;
+function changeQty(idx,val){
+  cart[idx].qty += val;
+  if(cart[idx].qty<=0) cart.splice(idx,1);
+  document.getElementById('cartCount').innerText = cart.reduce((a,b)=>a+b.qty,0);
   renderCart();
-  updateCartCount();
 }
 
-function removeFromCart(id){
-  cart = cart.filter(item => item.id!==id);
-  updateCartCount();
+function removeFromCart(idx){
+  cart.splice(idx,1);
+  document.getElementById('cartCount').innerText = cart.reduce((a,b)=>a+b.qty,0);
   renderCart();
 }
 
 function toggleCart(){
-  const cartDrop=document.getElementById('cartDropdown');
-  cartDrop.style.display = cartDrop.style.display==='block'?'none':'block';
-  renderCart();
+  const dropdown = document.getElementById('cartDropdown');
+  dropdown.style.display = dropdown.style.display==='block'?'none':'block';
 }
 
 function goToCheckout(){
-  if(cart.length===0){
-    alert('السلة فارغة!');
-    return;
-  }
   document.getElementById('mainContent').style.display='none';
   document.getElementById('checkoutPage').style.display='block';
-  const checkoutProducts = document.getElementById('checkoutProducts');
-  let html = '<ul>';
-  let total = 0;
+  const checkoutDiv = document.getElementById('checkoutProducts');
+  checkoutDiv.innerHTML = '';
   cart.forEach(item=>{
-    total += item.price * item.qty;
-    html += `<li>${item.title} (${item.qty}) - ${convertPrice(item.price*item.qty)}</li>`;
+    const div = document.createElement('div');
+    div.innerHTML=`${item.title} - ${item.color} - ${item.price} ${selectedCurrency} × ${item.qty}`;
+    checkoutDiv.appendChild(div);
   });
-  html += `</ul><p><b>المجموع الكلي: ${convertPrice(total)}</b></p>`;
-  checkoutProducts.innerHTML = html;
 }
 
-document.getElementById('search').addEventListener('input',render);
-
-function selectCurrency(el){
-  document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('currency').value = el.dataset.currency;
+function selectCurrency(btn){
+  document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedCurrency = btn.dataset.currency;
   render();
+  renderCart();
 }
 
 render();
