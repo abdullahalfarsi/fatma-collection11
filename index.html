@@ -97,6 +97,20 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
       <small style="color:rgb(85,63,2); font-size:12px;">متجر للملابس والإكسسوارات</small>
     </div>
 
+<div id="invoiceModal" class="invoice-modal">
+  <div class="invoice-content">
+    <h2>فاتورتك</h2>
+    <div id="invoiceProducts"></div>
+    <hr>
+    <div class="invoice-total">المجموع: <span id="invoiceTotal">0</span></div>
+    <div class="invoice-actions">
+      <button class="btn" onclick="printInvoice()">🖨️ طباعة</button>
+      <button class="btn" onclick="sendInvoice()">📧 إرسال بالبريد</button>
+      <button class="btn close-btn" onclick="closeInvoice()">❌ إغلاق</button>
+    </div>
+  </div>
+</div>
+
     <!-- المنتجات -->
     <div id="invoiceProducts" style="margin-bottom:20px;"></div>
 
@@ -108,6 +122,35 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
     <!-- زر الطباعة -->
     <button onclick="printInvoice()" style="display:block; margin:auto; padding:12px 20px; background:rgb(255,200,0); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold; transition:0.3s; box-shadow:0 4px 10px rgba(0,0,0,0.2);">🖨️ طباعة الفاتورة</button>
   </div>
+</div>
+
+<div id="invoicePage" style="display:none; padding:20px; max-width:650px; margin:auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <div style="background:linear-gradient(135deg,#fff8e1,#fff1c6); border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.25); padding:25px; color:#333;">
+    <!-- شعار واسم المتجر -->
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="width:60px; height:60px; margin:auto; background:linear-gradient(135deg,#010005,#948928); border-radius:15px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:28px;">F</div>
+      <h2 style="margin:10px 0 0 0; color:rgb(85,63,2); font-size:22px;">فاتورة الشراء - FATMA COLLECTION</h2>
+      <small style="color:#555;">شكراً لتسوقك معنا!<br>تاريخ: <span id="invoiceDate"></span></small>
+    </div>
+
+    <!-- قائمة المنتجات في الفاتورة -->
+    <div id="invoiceItems"></div>
+
+    <!-- المجموع الكلي -->
+    <div style="text-align:right; font-weight:bold; font-size:18px; margin-top:15px;">المجموع الكلي: <span id="invoiceTotal">0</span></div>
+
+    <!-- أزرار الطباعة والإغلاق -->
+    <div style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+      <button onclick="printInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(85,63,2); color:white; cursor:pointer; font-size:14px;">طباعة الفاتورة</button>
+      <button onclick="closeInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(255,100,0); color:white; cursor:pointer; font-size:14px;">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+  <button onclick="printInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(85,63,2); color:white; cursor:pointer; font-size:14px;">طباعة الفاتورة</button>
+  <button onclick="sendInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(0,150,255); color:white; cursor:pointer; font-size:14px;">📧 إرسال الفاتورة</button>
+  <button onclick="closeInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(255,100,0); color:white; cursor:pointer; font-size:14px;">إغلاق</button>
 </div>
 
 <style>
@@ -128,6 +171,102 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 }
 .invoice-item:hover { background:rgba(255,255,255,1); transform:scale(1.02);}
 .invoice-item span { display:inline-block; }
+
+.invoice-modal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.invoice-modal.show { display: flex; }
+
+/* المحتوى */
+.invoice-content {
+  background: linear-gradient(135deg, #fefefe, #e6f0ff);
+  padding: 30px 25px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  animation: scaleIn 0.5s ease-out;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.invoice-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #3333aa;
+  letter-spacing: 1px;
+}
+
+.invoice-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #d0d0d0;
+  opacity: 0;
+  transform: translateY(-15px);
+  animation: slideIn 0.4s forwards;
+}
+
+.invoice-item:nth-child(1){ animation-delay: 0.1s; }
+.invoice-item:nth-child(2){ animation-delay: 0.2s; }
+.invoice-item:nth-child(3){ animation-delay: 0.3s; }
+.invoice-item:nth-child(4){ animation-delay: 0.4s; }
+.invoice-item:nth-child(5){ animation-delay: 0.5s; }
+
+.invoice-total {
+  text-align: right;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 15px;
+  color: #222;
+}
+
+.invoice-actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.invoice-actions .btn {
+  padding: 10px 18px;
+  border:none;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color:#fff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.invoice-actions .btn:hover {
+  background: linear-gradient(135deg, #45a049, #3e8e41);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.invoice-actions .close-btn {
+  background: linear-gradient(135deg, #ff4d4d, #e60000);
+}
+
+.invoice-actions .close-btn:hover {
+  background: linear-gradient(135deg, #e60000, #cc0000);
+}
+
+/* أنيميشن */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes scaleIn { from {transform: scale(0.8);} to {transform: scale(1);} }
+@keyframes slideIn { to {opacity:1; transform:translateY(0);} }
 </style>
 
 <header>
@@ -148,9 +287,10 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
   <aside>
     <h3>الفئات</h3>
     <button class="btn active" onclick="filterCategory('all')">الكل</button>
-    <button class="btn" onclick="filterCategory('jacket')">الجاكيتات</button>
-    <button class="btn" onclick="filterCategory('case')">كفرات الجوال</button>
-    <button class="btn" onclick="filterCategory('glases')">النظارات </button>
+    <button class="btn" onclick="filterCategory('jacket')">الجاكيتات | jacket</button>
+    <button class="btn" onclick="filterCategory('case')"> كفرات الجوال | case</button>
+    <button class="btn" onclick="filterCategory('glases')">النظارات | glasses </button>
+    <button class="btn" onclick="filterCategory('shoes')">الشوزات | shoes </button>
     <hr>
     <h3>اللون</h3>
     <div class="colors" id="colorFilter"></div>
@@ -230,7 +370,12 @@ const products = [
   {id:'np8', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/078f9c76-c6e0-4122-b9db-2e6b86ac5b4a.jpg','images/52e12d48-fa7f-4d04-8c60-8bbbc4226e17.jpg','images/20fdbef1-c36b-4bc0-9e1f-ff5a6a12495a.jpg']}},
   {id:'np9', type:'glases', title:'نظارات', price:2.5, colors:['أسود'], images:{'أسود':['images/f1d768c0-5f75-471c-a10f-c9144ec320d9.jpg','images/897d9d8d-8ef2-4348-8bd3-73f69d21b973.jpg']}},
   {id:'np10', type:'glases', title:'نظارات', price:3, colors:['أسود'], images:{'أسود':['images/2ed1e6fb-2aa0-4835-a209-284f5b9ff334.jpg','images/68fcb4a6-1bb4-482f-acd6-82f9d133fe52.jpg','images/cc4b538d-38af-453e-9aed-c18bfb79e8fb.jpg','images/d1a45a6c-b8bb-4a4b-816f-e675b6c99245.jpg']}},
-  {id:'np11', type:'glases', title:'نظارات', price:3, colors:['أسود'], images:{'أسود':['images/7ffc8fe3-777a-4819-b6fb-a9aa0dd42682.jpg','images/a2d9121a-fc00-4af3-a597-6568e8ecfa56.jpg','images/a2ec9a83-87ce-4242-9a50-b718fe7214a3.jpg','images/afe41fb0-4be1-4d83-ac95-03b7d9bb51dc.jpg']}}
+  {id:'np11', type:'glases', title:'نظارات', price:3, colors:['أسود'], images:{'أسود':['images/7ffc8fe3-777a-4819-b6fb-a9aa0dd42682.jpg','images/a2d9121a-fc00-4af3-a597-6568e8ecfa56.jpg','images/a2ec9a83-87ce-4242-9a50-b718fe7214a3.jpg','images/afe41fb0-4be1-4d83-ac95-03b7d9bb51dc.jpg']}},
+  {id:'s1', type:'shoes', title:'حذاء', price:12, colors:['أبيض'], images:{'أبيض':['images/e5e82666-16f6-4cf5-90fe-87c585d44200.jpg']}},
+{id:'s2', type:'shoes', title:'حذاء', price:12, colors:['أبيض'], images:{'أبيض':['images/441e122a-3510-4dcb-8942-0dd4d220db33.jpg','images/1d5e961a-85d6-4331-be59-b25232dba765.jpg']}},
+{id:'s3', type:'shoes', title:'حذاء', price:13.5, colors:['أبيض'], images:{'أبيض':['images/ab986aa5-36a7-4b94-abd2-728682d0e412.jpg','images/0d89d5cf-3070-4268-9f8a-8316af74f28c.jpg']}},
+{id:'s4', type:'shoes', title:'حذاء', price:15, colors:['أبيض'], images:{'أبيض':['images/79cf6efd-f571-4b13-8150-d1f402c85329.jpg']}},
+{id:'s5', type:'shoes', title:'حذاء', price:12, colors:['أبيض'], images:{'أبيض':['images/007ccfc5-019d-4ba3-9ccd-53b62136de20.jpg','images/35937633-c9cb-49f8-9692-0671b779bf9e.jpg']}}
 ];
 
 let cart = [];
@@ -279,6 +424,18 @@ function showInvoice() {
   document.getElementById('invoiceTotal').innerText = total.toFixed(2);
   document.getElementById('invoiceCurrency').innerText = selectedCurrency;
   invoiceDiv.style.display='block';
+}
+
+function sendInvoice() {
+  const invoiceHTML = document.getElementById('invoicePage').innerHTML;
+  const userEmail = prompt("أدخل بريدك الإلكتروني لإرسال الفاتورة:");
+  if(!userEmail) return alert("لم يتم إدخال البريد الإلكتروني!");
+
+  // هنا يمكن استبدال الكود التالي باستدعاء API حقيقي لإرسال البريد
+  console.log("إرسال الفاتورة إلى:", userEmail);
+  console.log(invoiceHTML);
+
+  alert("تم إرسال الفاتورة بنجاح إلى " + userEmail);
 }
 
 function showInvoice() {
