@@ -84,6 +84,7 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
   .colors button { font-size:12px; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -97,20 +98,6 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
       <small style="color:rgb(85,63,2); font-size:12px;">متجر للملابس والإكسسوارات</small>
     </div>
 
-<div id="invoiceModal" class="invoice-modal">
-  <div class="invoice-content">
-    <h2>فاتورتك</h2>
-    <div id="invoiceProducts"></div>
-    <hr>
-    <div class="invoice-total">المجموع: <span id="invoiceTotal">0</span></div>
-    <div class="invoice-actions">
-      <button class="btn" onclick="printInvoice()">🖨️ طباعة</button>
-      <button class="btn" onclick="sendInvoice()">📧 إرسال بالبريد</button>
-      <button class="btn close-btn" onclick="closeInvoice()">❌ إغلاق</button>
-    </div>
-  </div>
-</div>
-
     <!-- المنتجات -->
     <div id="invoiceProducts" style="margin-bottom:20px;"></div>
 
@@ -121,36 +108,27 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 
     <!-- زر الطباعة -->
     <button onclick="printInvoice()" style="display:block; margin:auto; padding:12px 20px; background:rgb(255,200,0); color:white; border:none; border-radius:12px; cursor:pointer; font-size:15px; font-weight:bold; transition:0.3s; box-shadow:0 4px 10px rgba(0,0,0,0.2);">🖨️ طباعة الفاتورة</button>
-  </div>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
 </div>
 
-<div id="invoicePage" style="display:none; padding:20px; max-width:650px; margin:auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  <div style="background:linear-gradient(135deg,#fff8e1,#fff1c6); border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.25); padding:25px; color:#333;">
-    <!-- شعار واسم المتجر -->
-    <div style="text-align:center; margin-bottom:20px;">
-      <div style="width:60px; height:60px; margin:auto; background:linear-gradient(135deg,#010005,#948928); border-radius:15px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:28px;">F</div>
-      <h2 style="margin:10px 0 0 0; color:rgb(85,63,2); font-size:22px;">فاتورة الشراء - FATMA COLLECTION</h2>
-      <small style="color:#555;">شكراً لتسوقك معنا!<br>تاريخ: <span id="invoiceDate"></span></small>
-    </div>
-
-    <!-- قائمة المنتجات في الفاتورة -->
-    <div id="invoiceItems"></div>
-
-    <!-- المجموع الكلي -->
-    <div style="text-align:right; font-weight:bold; font-size:18px; margin-top:15px;">المجموع الكلي: <span id="invoiceTotal">0</span></div>
-
-    <!-- أزرار الطباعة والإغلاق -->
-    <div style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
-      <button onclick="printInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(85,63,2); color:white; cursor:pointer; font-size:14px;">طباعة الفاتورة</button>
-      <button onclick="closeInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(255,100,0); color:white; cursor:pointer; font-size:14px;">إغلاق</button>
-    </div>
-  </div>
+<!-- ===== إرسال الفاتورة بالإيميل ===== -->
+<div style="margin-top:15px;text-align:center">
+  <input id="manualEmail" type="email" placeholder="أدخل البريد الإلكتروني"
+    style="width:90%;max-width:350px;padding:10px;border-radius:10px;border:1px solid #ccc;margin-bottom:10px">
+  <br>
+  <button type="button" onclick="sendInvoiceEmail()"
+    style="padding:10px 20px;border:none;border-radius:12px;background:#25c16f;color:#fff;font-weight:bold;cursor:pointer">
+    📧 إرسال الفاتورة بالإيميل
+  </button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
 </div>
 
-<div style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
-  <button onclick="printInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(85,63,2); color:white; cursor:pointer; font-size:14px;">طباعة الفاتورة</button>
-  <button onclick="sendInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(0,150,255); color:white; cursor:pointer; font-size:14px;">📧 إرسال الفاتورة</button>
-  <button onclick="closeInvoice()" style="padding:10px 15px; border:none; border-radius:12px; background:rgb(255,100,0); color:white; cursor:pointer; font-size:14px;">إغلاق</button>
+  </div>
 </div>
 
 <style>
@@ -171,102 +149,6 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
 }
 .invoice-item:hover { background:rgba(255,255,255,1); transform:scale(1.02);}
 .invoice-item span { display:inline-block; }
-
-.invoice-modal {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.4s ease-out;
-}
-
-.invoice-modal.show { display: flex; }
-
-/* المحتوى */
-.invoice-content {
-  background: linear-gradient(135deg, #fefefe, #e6f0ff);
-  padding: 30px 25px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 80%;
-  overflow-y: auto;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-  animation: scaleIn 0.5s ease-out;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.invoice-content h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #3333aa;
-  letter-spacing: 1px;
-}
-
-.invoice-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #d0d0d0;
-  opacity: 0;
-  transform: translateY(-15px);
-  animation: slideIn 0.4s forwards;
-}
-
-.invoice-item:nth-child(1){ animation-delay: 0.1s; }
-.invoice-item:nth-child(2){ animation-delay: 0.2s; }
-.invoice-item:nth-child(3){ animation-delay: 0.3s; }
-.invoice-item:nth-child(4){ animation-delay: 0.4s; }
-.invoice-item:nth-child(5){ animation-delay: 0.5s; }
-
-.invoice-total {
-  text-align: right;
-  font-weight: bold;
-  font-size: 18px;
-  margin-top: 15px;
-  color: #222;
-}
-
-.invoice-actions {
-  margin-top: 25px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.invoice-actions .btn {
-  padding: 10px 18px;
-  border:none;
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color:#fff;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.invoice-actions .btn:hover {
-  background: linear-gradient(135deg, #45a049, #3e8e41);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.invoice-actions .close-btn {
-  background: linear-gradient(135deg, #ff4d4d, #e60000);
-}
-
-.invoice-actions .close-btn:hover {
-  background: linear-gradient(135deg, #e60000, #cc0000);
-}
-
-/* أنيميشن */
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes scaleIn { from {transform: scale(0.8);} to {transform: scale(1);} }
-@keyframes slideIn { to {opacity:1; transform:translateY(0);} }
 </style>
 
 <header>
@@ -287,10 +169,30 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
   <aside>
     <h3>الفئات</h3>
     <button class="btn active" onclick="filterCategory('all')">الكل</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <button class="btn" onclick="filterCategory('jacket')">الجاكيتات | jacket</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <button class="btn" onclick="filterCategory('case')"> كفرات الجوال | case</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <button class="btn" onclick="filterCategory('glases')">النظارات | glasses </button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <button class="btn" onclick="filterCategory('shoes')">الشوزات | shoes </button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <hr>
     <h3>اللون</h3>
     <div class="colors" id="colorFilter"></div>
@@ -329,6 +231,10 @@ aside h3 { color:rgb(85, 63, 2); margin-bottom:10px; font-size:18px; border-bott
     <input type="text" placeholder="العنوان" required>
     <input type="email" placeholder="البريد الألكتروني (اختياري)">
     <button type="submit">إتمام الدفع</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
   </form>
 </div>
 
@@ -392,6 +298,10 @@ function render() {
       <h4>${p.title}</h4>
       <p>${p.price} ${selectedCurrency}</p>
       <button class="btn" onclick="showDetails('${p.id}')">التفاصيل</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     `;
     grid.appendChild(card);
   });
@@ -424,18 +334,6 @@ function showInvoice() {
   document.getElementById('invoiceTotal').innerText = total.toFixed(2);
   document.getElementById('invoiceCurrency').innerText = selectedCurrency;
   invoiceDiv.style.display='block';
-}
-
-function sendInvoice() {
-  const invoiceHTML = document.getElementById('invoicePage').innerHTML;
-  const userEmail = prompt("أدخل بريدك الإلكتروني لإرسال الفاتورة:");
-  if(!userEmail) return alert("لم يتم إدخال البريد الإلكتروني!");
-
-  // هنا يمكن استبدال الكود التالي باستدعاء API حقيقي لإرسال البريد
-  console.log("إرسال الفاتورة إلى:", userEmail);
-  console.log(invoiceHTML);
-
-  alert("تم إرسال الفاتورة بنجاح إلى " + userEmail);
 }
 
 function showInvoice() {
@@ -526,6 +424,10 @@ function renderFiltered(list){
       <h4>${p.title}</h4>
       <p>${p.price} ${selectedCurrency}</p>
       <button class="btn" onclick="showDetails('${p.id}')">التفاصيل</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     `;
     grid.appendChild(card);
   });
@@ -552,7 +454,15 @@ function showDetails(id){
     <img id="mainImage" src="${product.images[selectedColor][0]}" style="width:100%; border-radius:12px; margin-bottom:10px;">
     <div id="modalThumbnails">${renderImages(selectedColor)}</div>
     <button class="btn" id="addToCartBtn">أضف للسلة</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
     <button class="btn" onclick="closeModal()">إغلاق</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
   `;
 
   // 🔑 هذا هو الجزء الأهم: تعيين وظيفة النقر (onclick) للزر بشكل ديناميكي
@@ -629,9 +539,21 @@ function renderCart(){
       </div>
       <div class="cart-item-controls">
         <button onclick="changeQty(${index}, -1)">-</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
         <span>${item.qty}</span>
         <button onclick="changeQty(${index}, 1)">+</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
         <button onclick="removeFromCart(${index})">حذف</button>
+<div id="orderSuccessBox" style="display:none;margin-top:15px;padding:15px;border-radius:10px;background:#e8fff1;border:1px solid #2ecc71;color:#145a32;font-size:15px;">
+  💌 <strong>تم إرسال الفاتورة بنجاح</strong><br>
+  <span id="orderNumberText"></span>
+</div>
       </div>
     `;
     cartDiv.appendChild(div);
@@ -679,5 +601,138 @@ function selectCurrency(btn){
 
 render();
 </script>
+
+<script>
+(function(){
+  emailjs.init("x40PxDimMNr7k4z6j");
+})();
+
+function sendInvoiceEmail(){
+  const email = document.getElementById('manualEmail').value;
+  if(!email){
+    alert('الرجاء إدخال البريد الإلكتروني');
+    return;
+  }
+
+  const params = {
+    to_email: email,
+    message: buildInvoiceText(),
+    reply_to: "abodalfarsi99@gmail.com"
+  };
+
+  emailjs.send("service_qa3n7l","template_aphzj8p",params)
+    .then(()=>alert("💌 تم إرسال الفاتورة بنجاح"))
+    .catch(e=>{
+      alert("❌ لم يتم الإرسال");
+      console.log(e);
+    });
+}
+</script>
+
+
+<script>
+/* ===== توليد نص الفاتورة (إضافة آمنة) ===== */
+function buildInvoiceText() {
+  let text = "فاتورة شراء من FATMA COLLECTION\n\n";
+
+  const items = document.querySelectorAll('.cart-item');
+  if (!items || items.length === 0) {
+    text += "- منتج واحد\n";
+  } else {
+    items.forEach(item => {
+      const name = item.querySelector('.item-name')?.innerText || 'منتج';
+      const qty = item.querySelector('.qty')?.innerText || '1';
+      const price = item.querySelector('.item-price')?.innerText || '';
+      text += `- ${name} × ${qty} ${price}\n`;
+    });
+  }
+
+  const total =
+    document.querySelector('.total-price')?.innerText ||
+    document.querySelector('.total')?.innerText ||
+    'OMR 0.00';
+
+  text += `\nالمجموع الكلي: ${total}\n\n`;
+  text += "💌 شكرًا لتسوقك من FATMA COLLECTION";
+
+  return text;
+}
+</script>
+
+<script>
+/* ===== رقم الطلب ===== */
+function generateOrderNumber() {
+  return "FC-" + Date.now().toString().slice(-6);
+}
+
+/* ===== توليد نص الفاتورة ===== */
+function buildInvoiceText() {
+  const orderNumber = window.currentOrderNumber || generateOrderNumber();
+  window.currentOrderNumber = orderNumber;
+
+  let text = "فاتورة شراء من FATMA COLLECTION\n";
+  text += "رقم الطلب: " + orderNumber + "\n\n";
+
+  const items = document.querySelectorAll('.cart-item');
+  if (!items || items.length === 0) {
+    text += "- منتج واحد\n";
+  } else {
+    items.forEach(item => {
+      const name = item.querySelector('.item-name')?.innerText || 'منتج';
+      const qty = item.querySelector('.qty')?.innerText || '1';
+      const price = item.querySelector('.item-price')?.innerText || '';
+      text += `- ${name} × ${qty} ${price}\n`;
+    });
+  }
+
+  const total =
+    document.querySelector('.total-price')?.innerText ||
+    document.querySelector('.total')?.innerText ||
+    'OMR 0.00';
+
+  text += `\nالمجموع الكلي: ${total}\n\n`;
+  text += "💌 شكرًا لتسوقك من FATMA COLLECTION";
+
+  return text;
+}
+
+/* ===== إرسال الفاتورة بالإيميل ===== */
+function sendInvoiceEmail() {
+  const emailInput = document.querySelector('input[type="email"], input[value*="@"]');
+  const toEmail = emailInput ? emailInput.value.trim() : '';
+
+  if (!toEmail) {
+    alert("❌ يرجى إدخال البريد الإلكتروني");
+    return;
+  }
+
+  const templateParams = {
+    to_email: toEmail,
+    message: buildInvoiceText()
+  };
+
+  emailjs.send(
+    "service_qa3nl7l",
+    "template_aphzj8p",
+    templateParams
+  )
+  .then(function () {
+    
+document.getElementById("orderNumberText").innerText = "رقم الطلب: " + window.currentOrderNumber;
+document.getElementById("orderSuccessBox").style.display = "block";
+
+// إخفاء السلة بعد الدفع
+const cartBox = document.querySelector(".cart-box") || document.querySelector(".cart");
+if(cartBox){ cartBox.style.display = "none"; }
+
+  })
+  .catch(function (error) {
+    console.error("EmailJS Error:", error);
+    alert("❌ لم يتم إرسال الفاتورة");
+  });
+}
+</script>
+
 </body>
+
 </html>
